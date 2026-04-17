@@ -6,15 +6,10 @@ from flask import Flask, jsonify, make_response, request, send_from_directory
 
 app = Flask(__name__)
 
-# HTML/CSS/JS: use esta pasta (commitada), não `public/` — na Vercel `public/` não entra no zip da função Python.
 FRONTEND_DIR = Path(__file__).resolve().parent / "frontend"
 
 
 def get_connection():
-    """
-    Variáveis de ambiente (ex.: Vercel):
-    ORACLE_USER, ORACLE_PASSWORD, ORACLE_DSN (ex.: host:1521/servicename)
-    """
     user = os.environ.get("ORACLE_USER")
     password = os.environ.get("ORACLE_PASSWORD")
     dsn = os.environ.get("ORACLE_DSN")
@@ -174,21 +169,44 @@ def aplicar_cashback():
 
 @app.route("/usuarios", methods=["GET"])
 def listar_usuarios():
+    evento_id = request.args.get("evento_id")
+    evento_id_int = None
+    if evento_id is not None and str(evento_id).strip() != "":
+        try:
+            evento_id_int = int(evento_id)
+        except (TypeError, ValueError):
+            return jsonify({"status": "error", "message": "evento_id na query deve ser inteiro."}), 400
+
     try:
         conn = get_connection()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT ID, NOME, SALDO FROM USUARIOS")
+        if evento_id_int is not None:
+            cursor.execute(
+                """
+                SELECT DISTINCT u.ID, u.NOME, u.SALDO, i.ID_EVENTO
+                FROM USUARIOS u
+                INNER JOIN INSCRICOES i ON i.USUARIO_ID = u.ID
+                WHERE i.ID_EVENTO = :evento_id
+                ORDER BY u.ID
+                """,
+                evento_id=evento_id_int,
+            )
+        else:
+            cursor.execute("SELECT ID, NOME, SALDO FROM USUARIOS ORDER BY ID")
 
         usuarios = []
         for row in cursor.fetchall():
-            usuarios.append(
-                {
-                    "id": row[0],
-                    "nome": row[1],
-                    "saldo": float(row[2]) if row[2] is not None else 0.0,
-                }
-            )
+            item = {
+                "id": row[0],
+                "nome": row[1],
+                "saldo": float(row[2]) if row[2] is not None else 0.0,
+            }
+            if evento_id_int is not None:
+                item["id_evento"] = int(row[3]) if row[3] is not None else None
+            else:
+                item["id_evento"] = None
+            usuarios.append(item)
 
         return jsonify(usuarios)
     except Exception as e:

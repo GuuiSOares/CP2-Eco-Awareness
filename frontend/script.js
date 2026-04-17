@@ -1,13 +1,11 @@
 function apiBase() {
     const { protocol, hostname } = window.location;
-    // Local: Flask em outra porta. Produção (ex.: Vercel): mesma origem, rotas na raiz.
     if (hostname === "localhost" || hostname === "127.0.0.1") {
         return `${protocol}//${hostname}:5000`;
     }
     return "";
 }
 
-/** Texto da dica “API em …”: em produção apiBase() é vazio, então mostramos a URL do site. */
 function apiHintLabel() {
     const base = apiBase();
     if (base) return base;
@@ -46,7 +44,7 @@ function setTableStatus(text, kind = "") {
     st.dataset.kind = kind;
 }
 
-function renderUsuarios(data) {
+function renderUsuarios(data, eventoFiltro) {
     const tbody = $("#tabela tbody");
     tbody.innerHTML = "";
 
@@ -54,7 +52,7 @@ function renderUsuarios(data) {
         const tr = document.createElement("tr");
         tr.className = "row-empty";
         tr.innerHTML =
-            '<td colspan="3">Nenhum usuário retornado. Verifique a API ou o cadastro no Oracle.</td>';
+            '<td colspan="4">Nenhum usuário retornado. Verifique a API ou o cadastro no Oracle.</td>';
         tbody.appendChild(tr);
         setTableStatus("Lista vazia.", "muted");
         return;
@@ -66,14 +64,23 @@ function renderUsuarios(data) {
             typeof u.saldo === "number" && !Number.isNaN(u.saldo)
                 ? u.saldo
                 : Number(u.saldo) || 0;
+        const ev =
+            u.id_evento != null && u.id_evento !== undefined
+                ? String(u.id_evento)
+                : "—";
         tr.innerHTML = `
             <td>${u.id}</td>
             <td>${escapeHtml(String(u.nome ?? ""))}</td>
+            <td class="num narrow">${escapeHtml(ev)}</td>
             <td class="num">R$ ${saldo.toFixed(2)}</td>
         `;
         tbody.appendChild(tr);
     });
-    setTableStatus(`${data.length} usuário(s) carregado(s).`, "ok");
+    const filtroTxt =
+        eventoFiltro != null && String(eventoFiltro).trim() !== ""
+            ? ` (evento ${String(eventoFiltro).trim()})`
+            : "";
+    setTableStatus(`${data.length} usuário(s)${filtroTxt}.`, "ok");
 }
 
 function escapeHtml(s) {
@@ -94,16 +101,26 @@ function friendlyFetchError(err) {
     return err.message || String(err);
 }
 
+function usuariosQueryUrl() {
+    const raw = $("#eventoId").value.trim();
+    if (!raw) return `${API}/usuarios`;
+    const n = Number(raw);
+    if (Number.isNaN(n) || raw === "") return `${API}/usuarios`;
+    const params = new URLSearchParams({ evento_id: String(n) });
+    return `${API}/usuarios?${params.toString()}`;
+}
+
 function carregarUsuarios() {
     const tbody = $("#tabela tbody");
+    const eventoFiltro = $("#eventoId").value.trim();
     tbody.innerHTML = "";
     const tr = document.createElement("tr");
     tr.className = "row-loading";
-    tr.innerHTML = '<td colspan="3"><span class="skeleton-line"></span></td>';
+    tr.innerHTML = '<td colspan="4"><span class="skeleton-line"></span></td>';
     tbody.appendChild(tr);
     setTableStatus("Carregando usuários…", "loading");
 
-    fetch(`${API}/usuarios`)
+    fetch(usuariosQueryUrl())
         .then(async (res) => {
             const data = await res.json().catch(() => null);
             if (!res.ok) {
@@ -114,13 +131,13 @@ function carregarUsuarios() {
             return data;
         })
         .then((data) => {
-            renderUsuarios(data);
+            renderUsuarios(data, eventoFiltro);
         })
         .catch((err) => {
             tbody.innerHTML = "";
             const trErr = document.createElement("tr");
             trErr.className = "row-empty row-empty--error";
-            trErr.innerHTML = `<td colspan="3">${escapeHtml(friendlyFetchError(err))}</td>`;
+            trErr.innerHTML = `<td colspan="4">${escapeHtml(friendlyFetchError(err))}</td>`;
             tbody.appendChild(trErr);
             setTableStatus("Erro ao carregar.", "error");
             showToast(friendlyFetchError(err), "error");
@@ -165,6 +182,11 @@ function init() {
     $("#btnRefresh").addEventListener("click", carregarUsuarios);
     $("#eventoId").addEventListener("keydown", (e) => {
         if (e.key === "Enter") aplicarCashback();
+    });
+    let tUsuarios;
+    $("#eventoId").addEventListener("input", () => {
+        clearTimeout(tUsuarios);
+        tUsuarios = setTimeout(() => carregarUsuarios(), 350);
     });
     carregarUsuarios();
 }

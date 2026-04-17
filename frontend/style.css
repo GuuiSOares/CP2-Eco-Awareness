@@ -137,19 +137,11 @@ body {
     width: 2.25rem;
 }
 
-.event-ids__note {
-    margin: 0.75rem 0 0;
-    font-size: 0.78rem;
+.event-ids__date {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
     color: var(--muted);
-}
-
-.event-ids__note code {
-    color: var(--text);
-    background: #0b1220;
-    padding: 0.1rem 0.35rem;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    font-size: 0.75rem;
+    font-size: 0.85em;
 }
 
 .form-row {
@@ -323,6 +315,11 @@ tbody tr:hover td {
 .num {
     text-align: right;
     font-variant-numeric: tabular-nums;
+}
+
+th.narrow,
+td.narrow {
+    width: 5.5rem;
 }
 
 .row-empty td,

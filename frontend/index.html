@@ -16,35 +16,36 @@
 
         <section class="panel" aria-labelledby="acao-cashback">
             <h2 id="acao-cashback" class="visually-hidden">Gerar cashback</h2>
-            <div class="event-ids" role="region" aria-label="Referência dos IDs de eventos">
-                <p class="event-ids__title">Referência para avaliação — IDs dos eventos no Oracle</p>
+            <div class="event-ids" role="region" aria-label="Eventos">
+                <p class="event-ids__title">Eventos</p>
                 <table class="event-ids__table">
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
-                            <th scope="col">Evento</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">Data</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td class="event-ids__id">1</td><td>Feira de sustentabilidade</td></tr>
-                        <tr><td class="event-ids__id">2</td><td>Palestra — pegada de carbono</td></tr>
-                        <tr><td class="event-ids__id">3</td><td>Oficina de compostagem</td></tr>
-                        <tr><td class="event-ids__id">4</td><td>Mutirão de limpeza urbana</td></tr>
+                        <tr><td class="event-ids__id">1</td><td>Eco Awareness 2026</td><td class="event-ids__date">16/04/2026</td></tr>
+                        <tr><td class="event-ids__id">2</td><td>Eco Talk 1</td><td class="event-ids__date">10/03/2026</td></tr>
+                        <tr><td class="event-ids__id">3</td><td>Eco Talk 2</td><td class="event-ids__date">17/03/2026</td></tr>
+                        <tr><td class="event-ids__id">4</td><td>Eco Talk 3</td><td class="event-ids__date">24/03/2026</td></tr>
+                        <tr><td class="event-ids__id">5</td><td>Eco Talk 4</td><td class="event-ids__date">31/03/2026</td></tr>
                     </tbody>
                 </table>
-                <p class="event-ids__note">Use um destes valores no campo abaixo (<code>evento_id</code> no POST <code>/cashback</code>).</p>
             </div>
             <div class="form-row">
                 <div class="field">
                     <label for="eventoId">ID do evento finalizado</label>
-                    <input type="number" id="eventoId" name="eventoId" min="1" max="4" step="1" placeholder="1 a 4" autocomplete="off" />
+                    <input type="number" id="eventoId" name="eventoId" min="1" max="5" step="1" placeholder="1 a 5" autocomplete="off" />
                 </div>
                 <button type="button" id="btnCashback" class="btn btn--primary">
                     <span class="btn__label">Gerar cashback</span>
                     <span class="btn__spinner" aria-hidden="true"></span>
                 </button>
             </div>
-            <p class="hint">API em <code id="apiHint"></code> — local: Flask na porta 5000; na Vercel: mesma URL do site.</p>
+            <p class="hint">API: <code id="apiHint"></code></p>
         </section>
 
         <section class="panel panel--table" aria-labelledby="lista-usuarios">
@@ -58,6 +59,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Nome</th>
+                            <th class="num narrow">ID evento</th>
                             <th class="num">Saldo</th>
                         </tr>
                     </thead>
