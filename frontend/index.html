@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Eco-Awareness — Cashback</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page">
+        <header class="hero">
+            <p class="hero__eyebrow">Eco-Awareness 2026</p>
+            <h1 class="hero__title">Programa de cashback progressivo</h1>
+            <p class="hero__sub">Distribua créditos conforme presença e tipo de ingresso.</p>
+        </header>
+
+        <section class="panel" aria-labelledby="acao-cashback">
+            <h2 id="acao-cashback" class="visually-hidden">Gerar cashback</h2>
+            <div class="form-row">
+                <div class="field">
+                    <label for="eventoId">ID do evento finalizado</label>
+                    <input type="number" id="eventoId" name="eventoId" min="1" placeholder="Ex.: 3" autocomplete="off" />
+                </div>
+                <button type="button" id="btnCashback" class="btn btn--primary">
+                    <span class="btn__label">Gerar cashback</span>
+                    <span class="btn__spinner" aria-hidden="true"></span>
+                </button>
+            </div>
+            <p class="hint">API em <code id="apiHint"></code> — local: Flask na porta 5000; na Vercel: mesma URL do site.</p>
+        </section>
+
+        <section class="panel panel--table" aria-labelledby="lista-usuarios">
+            <div class="section-head">
+                <h2 id="lista-usuarios">Usuários</h2>
+                <button type="button" id="btnRefresh" class="btn btn--ghost">Atualizar lista</button>
+            </div>
+            <div class="table-wrap">
+                <table id="tabela">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th class="num">Saldo</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <p id="tableStatus" class="table-status" role="status" aria-live="polite"></p>
+            </div>
+        </section>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
