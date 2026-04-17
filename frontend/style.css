@@ -89,6 +89,69 @@ body {
     font-size: 1.15rem;
 }
 
+.event-ids {
+    margin-bottom: 1.25rem;
+    padding: 1rem 1.1rem;
+    border-radius: 10px;
+    border: 1px dashed rgba(148, 163, 184, 0.45);
+    background: rgba(11, 18, 32, 0.65);
+}
+
+.event-ids__title {
+    margin: 0 0 0.65rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+}
+
+.event-ids__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.event-ids__table th,
+.event-ids__table td {
+    padding: 0.45rem 0.5rem 0.45rem 0;
+    border-bottom: 1px solid rgba(30, 41, 59, 0.9);
+    text-align: left;
+}
+
+.event-ids__table thead th {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    border-bottom-color: var(--border);
+}
+
+.event-ids__table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.event-ids__id {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    color: var(--text);
+    width: 2.25rem;
+}
+
+.event-ids__note {
+    margin: 0.75rem 0 0;
+    font-size: 0.78rem;
+    color: var(--muted);
+}
+
+.event-ids__note code {
+    color: var(--text);
+    background: #0b1220;
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    font-size: 0.75rem;
+}
+
 .form-row {
     display: flex;
     flex-wrap: wrap;

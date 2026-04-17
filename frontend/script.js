@@ -146,7 +146,11 @@ async function aplicarCashback() {
         if (!res.ok) {
             throw new Error(data.message || `Falha HTTP ${res.status}`);
         }
-        showToast(data.message || "Cashback aplicado.", "success");
+        const msg =
+            data.evento_id != null && data.evento_id !== undefined
+                ? `${data.message || "Cashback aplicado."} (evento_id: ${data.evento_id})`
+                : data.message || "Cashback aplicado.";
+        showToast(msg, "success");
         await carregarUsuarios();
     } catch (err) {
         showToast(friendlyFetchError(err), "error");

@@ -16,10 +16,28 @@
 
         <section class="panel" aria-labelledby="acao-cashback">
             <h2 id="acao-cashback" class="visually-hidden">Gerar cashback</h2>
+            <div class="event-ids" role="region" aria-label="Referência dos IDs de eventos">
+                <p class="event-ids__title">Referência para avaliação — IDs dos eventos no Oracle</p>
+                <table class="event-ids__table">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Evento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="event-ids__id">1</td><td>Feira de sustentabilidade</td></tr>
+                        <tr><td class="event-ids__id">2</td><td>Palestra — pegada de carbono</td></tr>
+                        <tr><td class="event-ids__id">3</td><td>Oficina de compostagem</td></tr>
+                        <tr><td class="event-ids__id">4</td><td>Mutirão de limpeza urbana</td></tr>
+                    </tbody>
+                </table>
+                <p class="event-ids__note">Use um destes valores no campo abaixo (<code>evento_id</code> no POST <code>/cashback</code>).</p>
+            </div>
             <div class="form-row">
                 <div class="field">
                     <label for="eventoId">ID do evento finalizado</label>
-                    <input type="number" id="eventoId" name="eventoId" min="1" placeholder="Ex.: 3" autocomplete="off" />
+                    <input type="number" id="eventoId" name="eventoId" min="1" max="4" step="1" placeholder="1 a 4" autocomplete="off" />
                 </div>
                 <button type="button" id="btnCashback" class="btn btn--primary">
                     <span class="btn__label">Gerar cashback</span>

@@ -142,7 +142,13 @@ def aplicar_cashback():
         conn = get_connection()
         cursor = conn.cursor()
         cursor.execute(plsql, evento_id=evento_id)
-        return jsonify({"status": "success", "message": "Cashback aplicado com sucesso!"})
+        return jsonify(
+            {
+                "status": "success",
+                "message": "Cashback aplicado com sucesso!",
+                "evento_id": evento_id,
+            }
+        )
 
     except oracledb.DatabaseError as e:
         err, = e.args
